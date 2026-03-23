@@ -1756,7 +1756,7 @@ function restorePAnswers(){
   var hx=document.getElementById('p-x-handle');if(hx&&pAnswers.xhandle)hx.value=pAnswers.xhandle;var ht=document.getElementById('p-tg-handle');if(ht&&pAnswers.telegram)ht.value=pAnswers.telegram;
 }
 function closePersonalizeModal(scrollDown){document.getElementById('pmodal-overlay').classList.remove('open');document.body.style.overflow='';if(scrollDown)skipToPrograms();}
-function updatePProgress(){var dots='';for(var i=1;i<=4;i++){dots+='<div class="pmodal-dot'+(i<=pCurStep?' done':'')+'"></div>'}document.getElementById('pmodal-progress').innerHTML=dots;}
+function updatePProgress(){var dots='';for(var i=1;i<=3;i++){dots+='<div class="pmodal-dot'+(i<=pCurStep?' done':'')+'"></div>'}document.getElementById('pmodal-progress').innerHTML=dots;}
 function toggleOpt(el){el.classList.toggle('sel');var q=el.getAttribute('data-q');var vals=[];document.querySelectorAll('[data-q="'+q+'"].sel').forEach(function(b){vals.push(b.getAttribute('data-v'))});pAnswers[q]=vals;}
 function selectOpt(el){var q=el.getAttribute('data-q');document.querySelectorAll('[data-q="'+q+'"]').forEach(function(b){b.classList.remove('sel')});el.classList.add('sel');pAnswers[q]=el.getAttribute('data-v');}
 
@@ -1766,15 +1766,13 @@ function pNext(step){
   if(from===0){pGoStart();return;}
   if(from===1&&!pAnswers.journey){pShake('pstep-1');showToast('Please select an option to continue');return;}
   if(from===2&&!pAnswers.vertical){pShake('pstep-2');showToast('Please select an option to continue');return;}
-  if(from===3&&(!pAnswers.type||pAnswers.type.length===0)){pShake('pstep-3');showToast('Select at least one option to continue');return;}
-
   pCurStep=step;document.querySelectorAll('.pmodal-step').forEach(function(s){s.classList.remove('active')});document.getElementById('pstep-'+step).classList.add('active');updatePProgress();
 }
 function pBack(step){pCurStep=step;document.querySelectorAll('.pmodal-step').forEach(function(s){s.classList.remove('active')});document.getElementById('pstep-'+step).classList.add('active');updatePProgress();}
 function pFinish(){
   var xh=document.getElementById('p-x-handle').value.trim();
   var tg=document.getElementById('p-tg-handle').value.trim();
-  if(!xh&&!tg){pShake('pstep-4');showToast('Add at least one way to reach you');return;}
+  if(!xh&&!tg){pShake('pstep-3');showToast('Add at least one way to reach you');return;}
   document.querySelectorAll('.pmodal-step').forEach(function(s){s.classList.remove('active')});
   document.getElementById('pstep-done').classList.add('active');
   try{localStorage.setItem('sc_answers',JSON.stringify(pAnswers));localStorage.setItem('sc_connected','1');}catch(e){}
@@ -1806,11 +1804,12 @@ function openGetFeaturedModal(){document.getElementById('gfmodal-overlay').class
 function closeGetFeaturedModal(){document.getElementById('gfmodal-overlay').classList.remove('open');document.body.style.overflow='';}
 function submitGetFeatured(){var twitter=document.getElementById('gf-twitter').value.trim();var telegram=document.getElementById('gf-telegram').value.trim();if(!twitter&&!telegram){showToast('Please fill in at least one contact');return}document.getElementById('gfmodal-form').style.display='none';document.getElementById('gfmodal-thanks').style.display='block';sendToNotion('listing',{xhandle:twitter,telegram:telegram});}
 
-function skipToPrograms(){document.getElementById('prog-list').scrollIntoView({behavior:'smooth',block:'start'});}
+function skipToPrograms(){document.getElementById('featured-grid').scrollIntoView({behavior:'smooth',block:'start'});}
 function focusGateEmail(){document.getElementById('gate-wrapper').scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){document.getElementById('gate-email').focus()},400)}
 
 function openModal(id){
-  if(!unlocked){var fids=getFiltered().slice(0,FREE_COUNT).map(function(p){return p.id});if(fids.indexOf(id)===-1){focusGateEmail();showToast('Unlock free access to view full details');return}}
+  var featuredIds=[2,8,52];
+  if(!unlocked&&featuredIds.indexOf(id)===-1){var fids=getFiltered().slice(0,FREE_COUNT).map(function(p){return p.id});if(fids.indexOf(id)===-1){focusGateEmail();showToast('Unlock free access to view full details');return}}
   var p=PROGRAMS.find(function(x){return x.id===id});if(!p)return;
   var logo=LOGO_MAP[String(p.id)]||'';
   var logoHtml=logo?'<img src="'+logo+'" style="width:38px;height:38px;object-fit:cover;display:block;border-radius:7px;" onerror="this.style.display=\'none\'">':'';
@@ -1846,7 +1845,7 @@ if(typeof _isConnected!=='undefined'&&_isConnected){markAsConnected();}
     <!-- Intro -->
     <div class="pmodal-step active" id="pstep-0">
       <div class="pmodal-q" style="font-size:26px;">Find funding. Get connected to the people and resources that help you build.</div>
-      <div class="pmodal-q4-sub" style="font-size:14px;margin-top:-4px;margin-bottom:32px;">startupcash.io connects crypto founders with the right funding, partners and resources. Answer 4 quick questions and if there's a fit, we'll reach out directly and connect you with the right people.</div>
+      <div class="pmodal-q4-sub" style="font-size:14px;margin-top:-4px;margin-bottom:32px;">startupcash.io connects crypto founders with the right funding, partners and resources. Answer 3 quick questions and if there's a fit, we'll reach out directly and connect you with the right people.</div>
       <div class="pmodal-actions">
         <span></span>
         <button class="pmodal-next" onclick="pGoStart()">Let's go →</button>
@@ -1855,12 +1854,11 @@ if(typeof _isConnected!=='undefined'&&_isConnected){markAsConnected();}
 
     <!-- Step 1 -->
     <div class="pmodal-step" id="pstep-1">
-      <div class="pmodal-eyebrow">Step 1 of 4</div>
+      <div class="pmodal-eyebrow">Step 1 of 3</div>
       <div class="pmodal-q">Where are you in your funding journey?</div>
       <div class="pmodal-options">
-        <button class="pmodal-opt" data-q="journey" data-v="pre-idea" onclick="selectOpt(this)">Pre-idea</button>
-        <button class="pmodal-opt" data-q="journey" data-v="first-funding" onclick="selectOpt(this)">Looking for first funding</button>
-        <button class="pmodal-opt" data-q="journey" data-v="raising" onclick="selectOpt(this)">Currently raising</button>
+        <button class="pmodal-opt" data-q="journey" data-v="pre-funding" onclick="selectOpt(this)">Pre-funding</button>
+        <button class="pmodal-opt" data-q="journey" data-v="raising" onclick="selectOpt(this)">Currently raising funds</button>
         <button class="pmodal-opt" data-q="journey" data-v="funded" onclick="selectOpt(this)">Already funded</button>
       </div>
       <div class="pmodal-actions">
@@ -1871,7 +1869,7 @@ if(typeof _isConnected!=='undefined'&&_isConnected){markAsConnected();}
 
     <!-- Step 2 -->
     <div class="pmodal-step" id="pstep-2">
-      <div class="pmodal-eyebrow">Step 2 of 4</div>
+      <div class="pmodal-eyebrow">Step 2 of 3</div>
       <div class="pmodal-q">What are you building?</div>
       <div class="pmodal-options">
         <button class="pmodal-opt" data-q="vertical" data-v="defi" onclick="selectOpt(this)">DeFi</button>
@@ -1887,34 +1885,17 @@ if(typeof _isConnected!=='undefined'&&_isConnected){markAsConnected();}
       </div>
     </div>
 
-    <!-- Step 3 multi-select -->
+    <!-- Step 3 — Contact -->
     <div class="pmodal-step" id="pstep-3">
-      <div class="pmodal-eyebrow">Step 3 of 4</div>
-      <div class="pmodal-q">What funding are you after?</div>
-      <div class="pmodal-hint">Select all that apply</div>
-      <div class="pmodal-options">
-        <button class="pmodal-opt multi" data-q="type" data-v="grant" onclick="toggleOpt(this)">Grants</button>
-        <button class="pmodal-opt multi" data-q="type" data-v="accelerator" onclick="toggleOpt(this)">Accelerators</button>
-        <button class="pmodal-opt multi" data-q="type" data-v="hackathon" onclick="toggleOpt(this)">Hackathons</button>
-        <button class="pmodal-opt multi" data-q="type" data-v="credits" onclick="toggleOpt(this)">Credits</button>
-      </div>
-      <div class="pmodal-actions">
-        <button class="pmodal-back" onclick="pBack(2)">← Back</button>
-        <button class="pmodal-next" onclick="pNext(4)">Next →</button>
-      </div>
-    </div>
-
-    <!-- Step 4 — Contact -->
-    <div class="pmodal-step" id="pstep-4">
-      <div class="pmodal-eyebrow">Step 4 of 4</div>
+      <div class="pmodal-eyebrow">Step 3 of 3</div>
       <div class="pmodal-q">How to reach you</div>
       <div class="pmodal-q4-sub">Almost done, just tell us how to reach you.</div>
       <div class="pmodal-fields">
-        <input class="pmodal-pill-input" id="p-x-handle" type="text" oninput="pAnswers.xhandle=this.value" placeholder="X handle — @yourhandle">
-        <input class="pmodal-pill-input" id="p-tg-handle" type="text" oninput="pAnswers.telegram=this.value" placeholder="Telegram — @yourtelegram">
+        <input class="pmodal-pill-input" id="p-x-handle" type="text" oninput="pAnswers.xhandle=this.value" placeholder="Company X handle — @companyhandle">
+        <input class="pmodal-pill-input" id="p-tg-handle" type="text" oninput="pAnswers.telegram=this.value" placeholder="Your Telegram — @yourtelegram">
       </div>
       <div class="pmodal-actions">
-        <button class="pmodal-back" onclick="pBack(3)">← Back</button>
+        <button class="pmodal-back" onclick="pBack(2)">← Back</button>
         <button class="pmodal-next" onclick="pFinish()">Get connected →</button>
       </div>
     </div>
@@ -1938,7 +1919,7 @@ if(typeof _isConnected!=='undefined'&&_isConnected){markAsConnected();}
     <div id="gfmodal-form">
       <div class="gfmodal-eyebrow">List my opportunity</div>
       <div class="gfmodal-title">Get in front of crypto startups building real products.</div>
-      <div class="gfmodal-sub">For ecosystems and protocols actively running funding opportunities for startups building in crypto. Get in front of the builders actively looking for you.</div>
+      <div class="gfmodal-sub">For teams actively funding crypto startups, get in front of the builders actively looking for you.</div>
       <div class="gfmodal-sub" style="margin-top:8px;">Drop your details and we'll be in touch within 24 hours.</div>
       <div class="gfmodal-field">
         <label class="gfmodal-label">X Profile</label>
