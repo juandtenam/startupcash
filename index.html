@@ -1729,8 +1729,7 @@ function dismissNudge(){var nudge=document.getElementById('nudge-popup');if(nudg
 
 
 /* PERSONALIZE MODAL */
-var pAnswers=(function(){try{return JSON.parse(localStorage.getItem('sc_answers')||'{}')}catch(e){return{}}})();
-var _isConnected=localStorage.getItem('sc_connected')==='1';
+var pAnswers=(function(){try{return JSON.parse(localStorage.getItem('sc_answers')||'{}')}catch(e){return{}}})();var _isConnected=localStorage.getItem('sc_connected')==='1';
 var pCurStep=1;
 function openPersonalizeModal(){
   pCurStep=1;
@@ -1775,6 +1774,7 @@ function pFinish(){
   if(!xh&&!tg){pShake('pstep-4');showToast('Add at least one way to reach you');return;}
   document.querySelectorAll('.pmodal-step').forEach(function(s){s.classList.remove('active')});
   document.getElementById('pstep-done').classList.add('active');
+  try{localStorage.setItem('sc_answers',JSON.stringify(pAnswers));localStorage.setItem('sc_connected','1');}catch(e){}
   markAsConnected();
 }
 function markAsConnected(){
@@ -1828,6 +1828,7 @@ function closeModal(){document.getElementById('modal-overlay').classList.remove(
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal()});
 function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2800)}
 buildFeatured();render();
+if(typeof _isConnected!=='undefined'&&_isConnected){markAsConnected();}
 </script>
 
 <!-- PERSONALIZE MODAL -->
