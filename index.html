@@ -1391,9 +1391,10 @@ body {
   #hero-post-unlock { width: 100%; }
   #hero-post-unlock > div { flex-direction: column; width: 100%; gap: 10px; }
 
-  /* Hero stats */
-  .hero-stats { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
-  .stat { padding: 12px 16px; }
+  /* Hero stats — 4 individual squares */
+  .hero-stats { display: grid; grid-template-columns: 1fr 1fr; width: 100%; border: none; background: transparent; gap: 8px; }
+  .stat { padding: 14px 12px; border: 1px solid var(--rule); border-radius: 8px; background: var(--white); }
+  .stat + .stat { border-left: 1px solid var(--rule); }
   .stat-n { font-size: 22px; }
   .stat-l { font-size: 8px; }
 
