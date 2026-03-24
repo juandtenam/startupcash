@@ -1382,9 +1382,9 @@ body {
   .hero-sub { font-size: 14px; max-width: 100%; margin-bottom: 20px; }
 
   /* Hero CTA pill */
-  .cta-pill { flex-direction: column; border-radius: 12px; margin-bottom: 28px; width: 100%; box-shadow: 2px 2px 0 var(--ink); }
-  .cta-pill input { padding: 16px 18px; border-radius: 12px 12px 0 0; font-size: 13px; border-bottom: 1px solid var(--rule); text-align: center; }
-  .cta-pill button { border-radius: 0 0 12px 12px; padding: 14px 18px; font-size: 12px; letter-spacing: 0.5px; }
+  .cta-pill { flex-direction: column; border-radius: 12px; margin-bottom: 28px; width: 100%; box-shadow: none; overflow: hidden; }
+  .cta-pill input { padding: 16px 18px; border-radius: 0; font-size: 13px; border-bottom: 1px solid var(--rule); text-align: center; width: 100%; }
+  .cta-pill button { border-radius: 0 0 10px 10px; padding: 16px 18px; font-size: 12px; letter-spacing: 0.5px; width: 100%; text-align: center; }
 
   /* Hero post-unlock buttons */
   .hero-cta-fork-btn { min-width: unset; width: 100%; font-size: 11px; padding: 12px 18px; }
@@ -1434,7 +1434,7 @@ body {
   .gate-input { flex-direction: column; border-radius: 10px; }
   .gate-input input { padding: 12px 14px; border-radius: 10px 10px 0 0; font-size: 11px; }
   .gate-input button { border-radius: 0 0 10px 10px; padding: 12px 14px; font-size: 10px; }
-  .gate-blur { grid-template-columns: 1fr; }
+  .gate-blur { grid-template-columns: 1fr; max-height: 280px; overflow: hidden; }
 
   /* Modals */
   .modal-overlay { padding: 0; align-items: flex-end; }
@@ -1519,7 +1519,7 @@ body {
     <p class="hero-sub">Funding opportunities for crypto builders, verified and updated weekly so you never miss your window again.</p>
     <div id="hero-email-pill" style="width:min(480px,90vw);">
       <div class="cta-pill">
-        <input id="hero-email" type="email" placeholder="Enter your email to unlock $16M in programs →">
+        <input id="hero-email" type="email" placeholder="Unlock $16M+ in programs →">
         <button onclick="unlockFromHero()">Get free access</button>
       </div>
     </div>
@@ -2093,6 +2093,17 @@ if(typeof _isConnected!=='undefined'&&_isConnected){markAsConnected();}
 </div>
 
 <script>
+(function fixMobilePlaceholder(){
+  if(window.innerWidth<=768){
+    var el=document.getElementById('hero-email');
+    if(el)el.placeholder='Unlock $16M+ in programs →';
+  }
+  window.addEventListener('resize',function(){
+    var el=document.getElementById('hero-email');
+    if(!el)return;
+    el.placeholder='Unlock $16M+ in programs →';
+  });
+})();
 (function initTicker() {
   function run() {
     var track = document.getElementById('logo-track');
